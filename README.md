@@ -4,7 +4,7 @@ A standalone app written in Java to convert raw Accelerometer data from GT3X Fil
 
 Description
 -----------
-The zip file contains Java source code, executables and sample gt3x data to convert a gt3x file into an mHealth-compliant CSV file.
+This repository contains Java source code, executables and sample gt3x data to convert a GT3X files into mHealth-compliant CSV files.
 The parser currently only accounts for ACTIVITY-type data (accelerometer - **ACCEL** in mHealth).
 
 Folders description:
@@ -21,8 +21,7 @@ Download and install the latest Java JRE if you do not have it (most systems hav
 
 Usage
 -----
-Open a command prompt and type a command with the following usage pattern:
-
+Download the GT3XParser.jar file, ppen a command prompt and type a command with the following usage pattern:
 ```ShellSession
 java -jar GT3XParser.jar [INPUT GT3X FILE] [OUTPUT CSV DIRECTORYPATH] [G_VALUE/ADC_VALUE] [WITH_TIMESTAMP/WITHOUT_TIMESTAMP] [SPLIT/NO_SPLIT]
 ```
