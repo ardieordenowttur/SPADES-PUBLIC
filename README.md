@@ -4,13 +4,12 @@ A standalone app written in Java to convert raw Accelerometer data from GT3X Fil
 
 Description
 -----------
-This repository contains Java source code, executables and sample gt3x data to convert a GT3X files into mHealth-compliant CSV files.
-The parser currently only accounts for ACTIVITY-type data (accelerometer - **ACCEL** in mHealth).
+This repository contains Java source code, executables and sample gt3x data to convert a GT3X files into mHealth-compliant CSV files. The converter currently only accounts for ACTIVITY-type data (accelerometer - **ACCEL** in mHealth).
 
 Folders description:
 - **sample-data/v1**: Contains 3 sample Version1 gt3x files from Actigraph devices with serial numbers starting with **NEO**. Version1 of the gt3x file format specifications can be found here: [GitHub Link](https://github.com/actigraph/NHANES-GT3X-File-Format).
 - **sample-data/v2**: Contains 4 sample Version2 gt3x files from Actigraph devices with serial numbers starting with **MOS**. Version2 of the gt3x file format specifications can be found here: [GitHub Link](https://github.com/actigraph/GT3X-File-Format).
-- **src/**: Contains an eclipse project with the full source code.
+- **src/**: Contains a Java project with the full source code.
 - **GT3XParser.jar**: Is an executable jar file accessible from the command line to convert a gt3x file to mHealth-compliant CSV file.
 
 
@@ -61,6 +60,11 @@ or in the case where the "SPLIT" option is used, hourly mHealth CSV files will b
 
 Notes
 -----
-For devices whose serial number starts with **TAS**, the accelerometer data are classified as ACTIVITY2 in the GT3X file format.
-This parser currently does not support **ACTIVITY2** LogRecord data type yet.
+- For NHANES-GT3X File Format, a single 3-axis sample takes up 36 bits of data (4.5 bytes), which cannot be read as is as an array of bytes. This converter takes converts 72 bits of data at a time (9 bytes), which is a pair of 3-axis samples that can be read as an array of bytes.
+- For devices whose serial number starts with **TAS**, the accelerometer data are classified as ACTIVITY2 in the GT3X file format. This parser currently does not support **ACTIVITY2** LogRecord data type yet.
 
+
+Links
+-----
+SpadesLab - http://www.spadeslab.com/
+QMedic - http://www.qmedichealth.com/
