@@ -6,7 +6,7 @@ Description
 -----------
 This repository contains Java source code, executables and sample gt3x data to convert a GT3X files into mHealth-compliant CSV files. The converter currently only accounts for ACTIVITY-type data (accelerometer - **ACCEL** in mHealth).
 
-Folders description:
+Content description:
 - **sample-data/v1**: Contains 3 sample Version1 gt3x files from Actigraph devices with serial numbers starting with **NEO**. Version1 of the gt3x file format specifications can be found here: [GitHub Link](https://github.com/actigraph/NHANES-GT3X-File-Format).
 - **sample-data/v2**: Contains 4 sample Version2 gt3x files from Actigraph devices with serial numbers starting with **MOS**. Version2 of the gt3x file format specifications can be found here: [GitHub Link](https://github.com/actigraph/GT3X-File-Format).
 - **src/**: Contains a Java project with the full source code.
@@ -22,11 +22,11 @@ Usage
 -----
 Download the GT3XParser.jar file, ppen a command prompt and type a command with the following usage pattern:
 ```ShellSession
-java -jar GT3XParser.jar [INPUT GT3X FILE] [OUTPUT CSV DIRECTORYPATH] [G_VALUE/ADC_VALUE] [WITH_TIMESTAMP/WITHOUT_TIMESTAMP] [SPLIT/NO_SPLIT]
+java -jar GT3XParser.jar [INPUT GT3X FILE] [OUTPUT CSV DIRECTORY PATH] [G_VALUE/ADC_VALUE] [WITH_TIMESTAMP/WITHOUT_TIMESTAMP] [SPLIT/NO_SPLIT]
 ```
 
 - **[INPUT GT3X FILE]**: (required) Relative or absolute path for a GT3X file.
-- **[OUTPUT CSV DIRECTORYPATH]**: (required) Relative or absolute path of the directory for the mHealth CSV output file (Ending the path with a '/' is optional).
+- **[OUTPUT CSV DIRECTORY PATH]**: (required) Relative or absolute path of the directory for the mHealth CSV output file (Ending the path with a '/' is optional).
 - **[G_VALUE/ADC_VALUE]**: (required) Generate acceleration values in g acceleration or analog to digital conversion.
 - **[WITH_TIMESTAMP/WITHOUT_TIMESTAMP]**: (required) Generate date with or without timestamps.
 - **[SPLIT/NO_SPLIT]**: (required) Generate mHealth output in one big file or in multiple hourly files.
@@ -34,16 +34,16 @@ java -jar GT3XParser.jar [INPUT GT3X FILE] [OUTPUT CSV DIRECTORYPATH] [G_VALUE/A
 
 Example Commands
 ----------------
-1- Open a command prompt.
+1- Open a terminal or command prompt.
 
-2- Navigate to the directory where the GT3XParser.jar in the provided zip is located.
+2- Navigate to the directory where the downloaded GT3XParser.jar is located.
 
 3- Type the following command: 
 ```ShellSession
-java -jar GT3XParser.jar sample-data/sample1.gt3x /home/user/Documents G_VALUE WITH_TIMESTAMP SPLIT
+java -jar GT3XParser.jar sample-data/sample1.gt3x /home/user/Documents G_VALUE WITH_TIMESTAMP NO_SPLIT
 ```
 
-4- A mHealth CSV file should be generated in the directory with decoded GT3X data. For example:
+4- An mHealth CSV file should be generated in the specified output directory with decoded GT3X data. For example:
 ```ShellSession
 /home/user/Documents/ACCEL.MOS2A45130448.2015-04-13-15-15-00-000-M0400.csv
 ```
@@ -66,5 +66,6 @@ Notes
 
 Links
 -----
-SpadesLab - http://www.spadeslab.com/
-QMedic - http://www.qmedichealth.com/
+- SpadesLab - http://www.spadeslab.com/
+- QMedic - http://www.qmedichealth.com/
+- mHealth File Format Specification - <TBA>
