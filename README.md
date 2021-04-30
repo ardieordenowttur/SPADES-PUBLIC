@@ -66,6 +66,6 @@ Notes
 
 Links
 -----
-- SpadesLab - http://www.spadeslab.com/
+- SPADESLab - http://www.spadeslab.com/
 - QMedic - http://www.qmedichealth.com/
 - mHealth File Format Specification - TBA
