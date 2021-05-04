@@ -1,3 +1,14 @@
+/******************************************************************************************
+ * 
+ * Authors:
+ *  - Billy, Stanis Laus
+ *  - Albinali, Fahd
+ *  
+ * Company:
+ *  - Qmedic
+ * 
+ ******************************************************************************************/
+
 package com.qmedic.data.converter.gt3x;
 
 import java.io.BufferedInputStream;
