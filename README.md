@@ -15,12 +15,12 @@ Content description:
 
 Requirements
 ------------
-Download and install the latest Java JRE if you do not have it (most systems have JRE). 
+To run the executable (GT3XParser.jar), download and install the latest [Java JRE](http://www.oracle.com/technetwork/java/javase/downloads/index.html) if you do not have it (most systems have JRE). 
 
 
 Usage
 -----
-Download the GT3XParser.jar file, ppen a command prompt and type a command with the following usage pattern:
+Download the GT3XParser.jar file, open a command prompt and type a command with the following usage pattern:
 ```ShellSession
 java -jar GT3XParser.jar [INPUT GT3X FILE] [OUTPUT CSV DIRECTORY PATH] [G_VALUE/ADC_VALUE] [WITH_TIMESTAMP/WITHOUT_TIMESTAMP] [SPLIT/NO_SPLIT]
 ```
