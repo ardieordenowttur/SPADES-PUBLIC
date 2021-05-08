@@ -103,29 +103,56 @@ public class AccelPair {
 		}
 	}
 	
-	public double writeToFile(final FileWriter writer, double timestamp,final double delta, final boolean inGAcceleration, final boolean withTimestamps) throws IOException {				
+	public double writeToFile(
+			final FileWriter writer, 
+			double timestamp,
+			final double delta, 
+			final boolean inGAcceleration, 
+			final boolean withTimestamps
+			) throws IOException {				
 		if(withTimestamps) {			
-			if (inGAcceleration)
-				writer.append(GT3XUtils.SDF.format(new Date(Math.round(timestamp)))+","+GT3XUtils.DF.format(gx1)+","+GT3XUtils.DF.format(gy1)+","+GT3XUtils.DF.format(gz1)+"\n");
-			else
-				writer.append(GT3XUtils.SDF.format(new Date(Math.round(timestamp)))+","+x1+","+y1+","+z1+"\n");
+			if (inGAcceleration) {
+				writer.append(GT3XUtils.simpleDateFormatObject(GT3XUtils.MHEALTH_TIMESTAMP_DATA_FORMAT)
+						.format(new Date(Math.round(timestamp)))+","+
+						GT3XUtils.decimalFormatObject().format(gx1)+","+
+						GT3XUtils.decimalFormatObject().format(gy1)+","+
+						GT3XUtils.decimalFormatObject().format(gz1)+"\n");
+			} else {
+				writer.append(GT3XUtils.simpleDateFormatObject(GT3XUtils.MHEALTH_TIMESTAMP_DATA_FORMAT)
+						.format(new Date(Math.round(timestamp)))+","+
+						x1+","+y1+","+z1+"\n");
+			}
 			timestamp+=delta;		
 			
-			if (inGAcceleration)
-				writer.append(GT3XUtils.SDF.format(new Date(Math.round(timestamp)))+","+GT3XUtils.DF.format(gx2)+","+GT3XUtils.DF.format(gy2)+","+GT3XUtils.DF.format(gz2)+"\n");
-			else
-				writer.append(GT3XUtils.SDF.format(new Date(Math.round(timestamp)))+","+x2+","+y2+","+z2+"\n");
+			if (inGAcceleration) {
+				writer.append(GT3XUtils.simpleDateFormatObject(GT3XUtils.MHEALTH_TIMESTAMP_DATA_FORMAT)
+						.format(new Date(Math.round(timestamp)))+","+
+						GT3XUtils.decimalFormatObject().format(gx2)+","+
+						GT3XUtils.decimalFormatObject().format(gy2)+","+
+						GT3XUtils.decimalFormatObject().format(gz2)+"\n");
+			} else {
+				writer.append(GT3XUtils.simpleDateFormatObject(GT3XUtils.MHEALTH_TIMESTAMP_DATA_FORMAT)
+						.format(new Date(Math.round(timestamp)))+","+
+						x2+","+y2+","+z2+"\n");
+			}
 			timestamp+=delta;
 		} else {
-			if (inGAcceleration)
-				writer.append(GT3XUtils.DF.format(gx1)+","+GT3XUtils.DF.format(gy1)+","+GT3XUtils.DF.format(gz1)+"\n");
-			else
+			if (inGAcceleration) {
+				writer.append(GT3XUtils.decimalFormatObject().format(gx1)+","+
+						GT3XUtils.decimalFormatObject().format(gy1)+","+
+						GT3XUtils.decimalFormatObject().format(gz1)+"\n");
+			} else {
 				writer.append(x1+","+y1+","+z1+"\n");
+			}
 			timestamp+=delta;
-			if (inGAcceleration)
-				writer.append(GT3XUtils.DF.format(gx2)+","+GT3XUtils.DF.format(gy2)+","+GT3XUtils.DF.format(gz2)+"\n");
-			else
+			
+			if (inGAcceleration) {
+				writer.append(GT3XUtils.decimalFormatObject().format(gx2)+","+
+						GT3XUtils.decimalFormatObject().format(gy2)+","+
+						GT3XUtils.decimalFormatObject().format(gz2)+"\n");
+			} else {
 				writer.append(x2+","+y2+","+z2+"\n");
+			}
 			timestamp+=delta;
 		}
 		return timestamp;

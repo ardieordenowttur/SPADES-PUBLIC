@@ -27,6 +27,7 @@
 
 package com.qmedic.data.converter.gt3x;
 
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -38,10 +39,10 @@ import com.qmedic.data.converter.gt3x.enums.DeviceVersion;
 
 public class GT3XUtils {
 	
-	public static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"); // the format of the date for data
-	public static SimpleDateFormat SDF_MHEALTH_TIMEZONE = new SimpleDateFormat("Z"); // get timezone in mhealth format
-	public static SimpleDateFormat SDF_MHEALTH_FILENAME = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS");
-	public static final DecimalFormat DF = new DecimalFormat("0.000");
+	public static final String MHEALTH_TIMESTAMP_DATA_FORMAT = "yyyy/MM/dd HH:mm:ss.SSS"; // the format of the data timestamp
+	public static final String MHEALTH_TIMESTAMP_FILE_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"; // the format of the file timestamp
+	public static final String MHEALTH_TIMEZONE_FILE_FORMAT = "Z"; // the format of the timezone (UTC offset)
+	public static final String MHEALTH_DECIMAL_FORMAT = "0.000";
 	
 	public static final long MILLIS_IN_HOUR = 3600000L;
 	
@@ -67,7 +68,8 @@ public class GT3XUtils {
 	 * Helper method to find timezone offset
 	 */
 	public static String getTimeZone(final long dateInMillis) {
-		return SDF_MHEALTH_TIMEZONE.format(new Date(dateInMillis));
+    	SimpleDateFormat sdfTz = new SimpleDateFormat(MHEALTH_TIMEZONE_FILE_FORMAT);
+        return sdfTz.format(new Date(dateInMillis));
 	}
 	
 	
@@ -235,6 +237,24 @@ public class GT3XUtils {
 	 * Helper method to construct mHealth filename
 	 */
 	public static String getMHealthFileName(final long timestamp, final String sensorType, final String serialNumber, final String timezoneOffset) {
-		return sensorType+"."+serialNumber+"."+GT3XUtils.SDF_MHEALTH_FILENAME.format(new Date(timestamp))+"-"+timezoneOffset+".csv";
+        return sensorType + "." + serialNumber + "." + simpleDateFormatObject(MHEALTH_TIMESTAMP_FILE_FORMAT).format(new Date(timestamp)) + "-" + timezoneOffset + ".csv";
 	}
+	
+    /*
+     * Helper method to create a SimpleDatEFormat object
+     */
+    public static SimpleDateFormat simpleDateFormatObject(final String formatPattern) {
+    	SimpleDateFormat sdf = new SimpleDateFormat(formatPattern);
+    	sdf.setTimeZone(TimeZone.getTimeZone("UTC")); //Set timezone to UTC
+    	return sdf;
+    }
+    
+    /*
+     * Helper method to create a DecimalFormat object
+     */
+    public static DecimalFormat decimalFormatObject() {
+    	DecimalFormat df = new DecimalFormat(MHEALTH_DECIMAL_FORMAT);
+    	df.setRoundingMode(RoundingMode.HALF_UP);
+    	return df;
+    }
 }

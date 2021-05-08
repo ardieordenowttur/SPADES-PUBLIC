@@ -30,8 +30,6 @@ package com.qmedic.data.converter.gt3x;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.RoundingMode;
-import java.util.TimeZone;
 
 public class ConverterMain {
 	
@@ -75,9 +73,6 @@ public class ConverterMain {
 		// TODO If LOG_PARAMETER record is preset, then the ACCEL_SCALE (in info.txt?) value should be used.
 
 		try {
-			GT3XUtils.SDF.setTimeZone(TimeZone.getTimeZone("UTC")); // give a timezone reference for formating
-			GT3XUtils.SDF_MHEALTH_FILENAME.setTimeZone(TimeZone.getTimeZone("UTC"));
-			GT3XUtils.DF.setRoundingMode(RoundingMode.HALF_UP);
 
 			// Convert a file from GT3X to CSV file with/without timestamps and in g values or raw ADC
 			boolean inGAcceleration=((args[2].equals("G_VALUE"))?true:false);

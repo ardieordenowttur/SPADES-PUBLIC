@@ -111,9 +111,11 @@ public class GT3XFile {
 	 * A helper method to fill in a gap in the data (with the number of samples specified) 
 	 * using the last known data, starting from timestamp
 	 */
-	private double fillDataGap(final FileWriter writer, double timestamp, final String lastKnownData) throws IOException {
+	private double fillDataGap(final FileWriter writer, double timestamp, final String lastKnownData) 
+			throws IOException {
 		if(this._WithTimestamps) {
-			writer.append(GT3XUtils.SDF.format(new Date(Math.round(timestamp))) + "," + lastKnownData + "\n");
+			writer.append(GT3XUtils.simpleDateFormatObject(GT3XUtils.MHEALTH_TIMESTAMP_DATA_FORMAT).
+					format(new Date(Math.round(timestamp))) + "," + lastKnownData + "\n");
 		} else {
 			writer.append(lastKnownData+"\n");
 		}
@@ -213,7 +215,13 @@ public class GT3XFile {
 	 * This method is the entry point to convert both Version 1 and Version 2 gt3x file formats.
 	 * This is also where the initial file information are set up.
 	 */
-	public static GT3XFile fromGT3XToCSV(final File inFile, final String outFileDirectory, final boolean inGAcceleration, final boolean withTimestamps, final boolean split) throws IOException {
+	public static GT3XFile fromGT3XToCSV(
+			final File inFile, 
+			final String outFileDirectory, 
+			final boolean inGAcceleration, 
+			final boolean withTimestamps, 
+			final boolean split
+			) throws IOException {
 		// Check if the file is a valid GT3X V1 file
 		if(!isGT3XV1(inFile) && !isGT3XV2(inFile))
 			return null;
@@ -262,15 +270,21 @@ public class GT3XFile {
 								gt3xFile._AccelerationMax=Double.parseDouble(tokens[1].trim());
 
 							// Determine device version (V1/V2)
-							if(gt3xFile._DeviceVersion.equals(DeviceVersion.UNKNOWN) && (gt3xFile._SerialNumber!=null) && (gt3xFile._Firmware!=null)) {
+							if(gt3xFile._DeviceVersion.equals(DeviceVersion.UNKNOWN) 
+									&& (gt3xFile._SerialNumber!=null) 
+									&& (gt3xFile._Firmware!=null)) {
 								gt3xFile._DeviceVersion = GT3XUtils.getDeviceVersion(gt3xFile._SerialNumber, gt3xFile._Firmware);
 							}
 
 							// Set timezone offset to server's timezone offset if V1 (no info in info.txt)
-							if(gt3xFile._DeviceVersion.equals(DeviceVersion.V1) && (gt3xFile._StartDate!=-1) && gt3xFile._TimeZoneOffsetMHealth==null) {
+							if(gt3xFile._DeviceVersion.equals(DeviceVersion.V1) 
+									&& (gt3xFile._StartDate!=-1) 
+									&& gt3xFile._TimeZoneOffsetMHealth==null) {
 								gt3xFile._TimeZoneOffsetMHealth = GT3XUtils.getTimeZoneMHealth(gt3xFile._StartDate);
 							}
-						} else if(gt3xFile._DeviceVersion.equals(DeviceVersion.V2) && (tokens!=null) && (tokens.length==4)) {
+						} else if(gt3xFile._DeviceVersion.equals(DeviceVersion.V2) 
+								&& (tokens!=null) 
+								&& (tokens.length==4)) {
 							// Set timezone offset to timezone offset provided in info.txt if V2
 							if(tokens[0].trim().equals("TimeZone")) {
 								String tz = tokens[1].trim()+":"+tokens[2].trim()+":"+tokens[3].trim();
@@ -283,7 +297,11 @@ public class GT3XFile {
 				}
 				in.close();
 
-				gt3xFile._MHealthFileName = GT3XUtils.getMHealthFileName(gt3xFile._StartDate, "ACCEL", gt3xFile._SerialNumber, gt3xFile._TimeZoneOffsetMHealth);
+				gt3xFile._MHealthFileName = GT3XUtils.getMHealthFileName(
+						gt3xFile._StartDate, 
+						"ACCEL", 
+						gt3xFile._SerialNumber, 
+						gt3xFile._TimeZoneOffsetMHealth);
 				gt3xFile._OutputFileName = gt3xFile._OutputFileDirectory+gt3xFile._MHealthFileName;
 				gt3xFile._WithTimestamps = withTimestamps;
 				gt3xFile._InGAcceleration = inGAcceleration;
@@ -336,7 +354,11 @@ public class GT3XFile {
 						if(gt3xFile._PrevHourTimestamp != gt3xFile._CurrHourTimestamp) {
 							if(gt3xFile._PrevHourTimestamp!=0) {
 								writer.close();
-								gt3xFile._MHealthFileName = GT3XUtils.getMHealthFileName(gt3xFile._CurrHourTimestamp, "ACCEL", gt3xFile._SerialNumber, gt3xFile._TimeZoneOffsetMHealth);
+								gt3xFile._MHealthFileName = GT3XUtils.getMHealthFileName(
+										gt3xFile._CurrHourTimestamp, 
+										"ACCEL", 
+										gt3xFile._SerialNumber, 
+										gt3xFile._TimeZoneOffsetMHealth);
 								gt3xFile._OutputFileName = gt3xFile._OutputFileDirectory+gt3xFile._MHealthFileName;
 								writer = new FileWriter(gt3xFile._OutputFileName);
 								writer.append(gt3xFile._WithTimestamps ? "HEADER_TIME_STAMP,X,Y,Z\n" : "X,Y,Z\n"); // Add mHealth header
@@ -347,7 +369,12 @@ public class GT3XFile {
 
 					if (++i==9){						
 						AccelPair twoSamples = new AccelPair(bytes, GT3XFile.ACCELERATION_SCALE_FACTOR_NEO_CLE);
-						timestamp = twoSamples.writeToFile(writer, timestamp, gt3xFile._Delta, gt3xFile._InGAcceleration, gt3xFile._WithTimestamps);
+						timestamp = twoSamples.writeToFile(
+								writer, 
+								timestamp, 
+								gt3xFile._Delta, 
+								gt3xFile._InGAcceleration, 
+								gt3xFile._WithTimestamps);
 
 						gt3xFile._TotalBytes+=2;
 						if (gt3xFile._TotalBytes%1000==0)
@@ -492,7 +519,11 @@ public class GT3XFile {
 												if(gt3xFile._PrevHourTimestamp != gt3xFile._CurrHourTimestamp) {
 													if(gt3xFile._PrevHourTimestamp!=0) {
 														writer.close();
-														gt3xFile._MHealthFileName = GT3XUtils.getMHealthFileName(gt3xFile._CurrHourTimestamp, "ACCEL", gt3xFile._SerialNumber, gt3xFile._TimeZoneOffsetMHealth);
+														gt3xFile._MHealthFileName = GT3XUtils.getMHealthFileName(
+																gt3xFile._CurrHourTimestamp, 
+																"ACCEL", 
+																gt3xFile._SerialNumber, 
+																gt3xFile._TimeZoneOffsetMHealth);
 														gt3xFile._OutputFileName = gt3xFile._OutputFileDirectory+gt3xFile._MHealthFileName;
 														writer = new FileWriter(gt3xFile._OutputFileName);
 														writer.append(gt3xFile._WithTimestamps ? "HEADER_TIME_STAMP,X,Y,Z\n" : "X,Y,Z\n"); // Add mHealth header
@@ -516,7 +547,11 @@ public class GT3XFile {
 										if(gt3xFile._PrevHourTimestamp != gt3xFile._CurrHourTimestamp) {
 											if(gt3xFile._PrevHourTimestamp!=0) {
 												writer.close();
-												gt3xFile._MHealthFileName = GT3XUtils.getMHealthFileName(gt3xFile._CurrHourTimestamp, "ACCEL", gt3xFile._SerialNumber, gt3xFile._TimeZoneOffsetMHealth);
+												gt3xFile._MHealthFileName = GT3XUtils.getMHealthFileName(
+														gt3xFile._CurrHourTimestamp, 
+														"ACCEL", 
+														gt3xFile._SerialNumber, 
+														gt3xFile._TimeZoneOffsetMHealth);
 												gt3xFile._OutputFileName = gt3xFile._OutputFileDirectory+gt3xFile._MHealthFileName;
 												writer = new FileWriter(gt3xFile._OutputFileName);
 												writer.append(gt3xFile._WithTimestamps ? "HEADER_TIME_STAMP,X,Y,Z\n" : "X,Y,Z\n"); // Add mHealth header
@@ -527,12 +562,19 @@ public class GT3XFile {
 									if(++byteCounter==9) {
 										// Write the two samples from the current 9 bytes
 										AccelPair twoSamples = new AccelPair(payloadBuffer, accelerationScale);										
-										timestamp = twoSamples.writeToFile(writer, timestamp, gt3xFile._Delta, gt3xFile._InGAcceleration, gt3xFile._WithTimestamps);										
+										timestamp = twoSamples.writeToFile(
+												writer, 
+												timestamp, 
+												gt3xFile._Delta, 
+												gt3xFile._InGAcceleration, 
+												gt3xFile._WithTimestamps);										
 
 										// Save last recorded information (in case there is a gap following this data point)
 										gt3xFile._LastRecordedTimeStamp = (long)timestamp;
 										if(gt3xFile._InGAcceleration) {
-											gt3xFile._LastRecordedXYZ = GT3XUtils.DF.format(twoSamples.gx2)+","+GT3XUtils.DF.format(twoSamples.gy2)+","+GT3XUtils.DF.format(twoSamples.gz2);
+											gt3xFile._LastRecordedXYZ = GT3XUtils.decimalFormatObject().format(twoSamples.gx2)+","+
+													GT3XUtils.decimalFormatObject().format(twoSamples.gy2)+","+
+													GT3XUtils.decimalFormatObject().format(twoSamples.gz2);
 										} else {
 											gt3xFile._LastRecordedXYZ = twoSamples.x2+","+twoSamples.y2+","+twoSamples.z2;
 										}
