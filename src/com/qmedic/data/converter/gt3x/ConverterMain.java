@@ -89,7 +89,7 @@ public class ConverterMain {
 				return;	
 			}
 		} catch (IOException e) {
-			System.out.println("Error: "+args[0]+" not a valid GT3X file.");
+			System.out.println("Error: "+args[0]+" not a valid GT3X file. Problems reading the file...");
 			return;
 		}
 		
