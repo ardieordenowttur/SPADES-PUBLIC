@@ -61,12 +61,12 @@ public class ConverterMain {
 		try{
 			if (GT3XFile.isGT3XV1(new File(args[0]))==false &&
 					GT3XFile.isGT3XV2(new File(args[0]))==false){
-				System.out.println("Error: "+args[0]+" not a valid GT3X file.");
+				System.out.println("Error: "+args[0]+" not a valid GT3X file. Unknown version...");
 				return;
 			}
 		}
 		catch(IOException e){
-			System.out.println("Error: "+args[0]+" not a valid GT3X file.");
+			System.out.println("Error: "+args[0]+" not a valid GT3X file. Problems reading the file while determining version...");
 			return;
 		}
 		
@@ -84,8 +84,8 @@ public class ConverterMain {
 			GT3XFile f=GT3XFile.fromGT3XToCSV(new File(args[0]),args[1],inGAcceleration,withTimestamp,mHealthSplit);
 			if (f!=null){
 				System.out.println(f.toString());
-			}else{
-				System.out.println("Error: "+args[0]+" not a valid GT3X file.");
+			} else{
+				System.out.println("Error: "+args[0]+" not a valid GT3X file. Unknown error while reading the file...");
 				return;	
 			}
 		} catch (IOException e) {
