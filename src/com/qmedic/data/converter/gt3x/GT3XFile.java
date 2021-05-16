@@ -231,6 +231,7 @@ public class GT3XFile {
 		ZipFile zip = new ZipFile(inFile);
 		for (Enumeration<?> e = zip.entries(); e.hasMoreElements();) {
 			ZipEntry entry = (ZipEntry) e.nextElement();
+			System.out.println("Found "+entry.toString());
 			if (entry.toString().equals("info.txt"))
 			{				
 				BufferedReader in = new BufferedReader(new InputStreamReader(zip.getInputStream(entry)));
@@ -307,6 +308,8 @@ public class GT3XFile {
 				gt3xFile._InGAcceleration = inGAcceleration;
 				gt3xFile._SplitMHealth = split;
 
+				System.out.println("Parsed info.txt successfully...");
+				
 				if(gt3xFile._DeviceVersion == DeviceVersion.V1) {
 					return fromGT3XV1ToCSV(zip, gt3xFile);
 				} else if(gt3xFile._DeviceVersion == DeviceVersion.V2) {
