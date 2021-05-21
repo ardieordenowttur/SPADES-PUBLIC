@@ -241,11 +241,10 @@ public class GT3XUtils {
 	}
 	
     /*
-     * Helper method to create a SimpleDatEFormat object
+     * Helper method to create a SimpleDateFormat object
      */
     public static SimpleDateFormat simpleDateFormatObject(final String formatPattern) {
     	SimpleDateFormat sdf = new SimpleDateFormat(formatPattern);
-    	sdf.setTimeZone(TimeZone.getTimeZone("UTC")); //Set timezone to UTC
     	return sdf;
     }
     
