@@ -52,7 +52,7 @@ public class GT3XUtils {
 
 	
 	/*
-	 * Helper method that converts .NET ticks that Actigraph uses to millisecond
+	 * Helper method that converts .NET ticks that Actigraph uses to millisecond (UTC)
 	 */
 	public static long fromTickToUTCMillisecond(final long ticks)
 	{		
@@ -61,6 +61,16 @@ public class GT3XUtils {
 		Calendar calendar = Calendar.getInstance(utc);
 		calendar.setTime(date);
 		return calendar.getTimeInMillis();
+	}
+	
+	
+	/*
+	 * Helper method that converts .NET ticks that Actigraph uses to millisecond (local)
+	 */
+	public static long fromTickToMillisecond(final long ticks)
+	{		
+		Date date = new Date((ticks - TICKS_AT_EPOCH) / TICKS_PER_MILLISECOND);
+		return date.getTime();
 	}
 	
 	

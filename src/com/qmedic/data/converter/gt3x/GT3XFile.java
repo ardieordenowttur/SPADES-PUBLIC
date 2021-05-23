@@ -252,16 +252,16 @@ public class GT3XFile {
 							else if (tokens[0].trim().equals("Sample Rate"))
 								gt3xFile._SampleRate=Integer.parseInt(tokens[1].trim());						 
 							else if (tokens[0].trim().equals("Start Date"))
-								gt3xFile._StartDate=GT3XUtils.fromTickToUTCMillisecond(Long.parseLong(tokens[1].trim()));
+								gt3xFile._StartDate=GT3XUtils.fromTickToMillisecond(Long.parseLong(tokens[1].trim()));
 							else if (tokens[0].trim().equals("Download Date"))
-								gt3xFile._DownloadDate=GT3XUtils.fromTickToUTCMillisecond(Long.parseLong(tokens[1].trim()));
+								gt3xFile._DownloadDate=GT3XUtils.fromTickToMillisecond(Long.parseLong(tokens[1].trim()));
 							else if (tokens[0].trim().equals("Board Revision"))
 								gt3xFile._BoardRevision=Integer.parseInt(tokens[1].trim());
 							// Version 2 only
 							else if (tokens[0].trim().equals("Device Type"))
 								gt3xFile._DeviceType=tokens[1].trim();
 							else if (tokens[0].trim().equals("Last Sample Time"))
-								gt3xFile._LastSampleTime=GT3XUtils.fromTickToUTCMillisecond(Long.parseLong(tokens[1].trim()));
+								gt3xFile._LastSampleTime=GT3XUtils.fromTickToMillisecond(Long.parseLong(tokens[1].trim()));
 							else if (tokens[0].trim().equals("Acceleration Scale"))
 								gt3xFile._AccelerationScale=Double.parseDouble(tokens[1].trim());
 							else if (tokens[0].trim().equals("Acceleration Min"))
