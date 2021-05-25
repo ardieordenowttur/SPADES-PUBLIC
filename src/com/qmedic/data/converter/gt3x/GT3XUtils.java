@@ -22,6 +22,7 @@
  * 
  * Authors:
  *  - Billy, Stanis Laus
+ *  - Rao, Zhibiao
  * 
  ******************************************************************************************/
 
@@ -50,6 +51,28 @@ public class GT3XUtils {
 	private static final long TICKS_AT_EPOCH = 621355968000000000L;		
 	private static final long TICKS_PER_MILLISECOND = 10000;
 
+	
+	/*
+	 * Fix timestamp to make the milliseconds uniformed across all minutes
+	 */
+	public static double FixTimeStamp(double timestamp, double delta,boolean yes)
+	{		
+		long tenTimesTS = (long) (timestamp*100);	
+		double mmseconds;
+		if (yes){
+			mmseconds = (tenTimesTS - (tenTimesTS/100000)*100000)/100 + delta;  // get milliseconds
+		}else{
+			mmseconds = (tenTimesTS - (tenTimesTS/100000)*100000)/100;  // get milliseconds
+		}	
+		//
+		if (mmseconds >= 1000.0 - Math.round(delta/2)){
+			mmseconds = 1000;
+		}else {
+			mmseconds = Math.round(mmseconds/delta)*delta;
+		}
+		
+		return (tenTimesTS/100000)*1000 + Math.round(mmseconds);
+	}
 	
 	/*
 	 * Helper method that converts .NET ticks that Actigraph uses to millisecond (UTC)

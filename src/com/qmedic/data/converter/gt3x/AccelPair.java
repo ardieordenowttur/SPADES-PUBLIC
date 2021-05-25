@@ -113,29 +113,31 @@ public class AccelPair {
 		if(withTimestamps) {			
 			if (inGAcceleration) {
 				writer.append(GT3XUtils.simpleDateFormatObject(GT3XUtils.MHEALTH_TIMESTAMP_DATA_FORMAT)
-						.format(new Date(Math.round(timestamp)))+","+
+						.format(new Date((long) GT3XUtils.FixTimeStamp(timestamp, delta,false)))+","+
 						GT3XUtils.decimalFormatObject().format(gx1)+","+
 						GT3XUtils.decimalFormatObject().format(gy1)+","+
 						GT3XUtils.decimalFormatObject().format(gz1)+"\n");
 			} else {
 				writer.append(GT3XUtils.simpleDateFormatObject(GT3XUtils.MHEALTH_TIMESTAMP_DATA_FORMAT)
-						.format(new Date(Math.round(timestamp)))+","+
+						.format(new Date((long) GT3XUtils.FixTimeStamp(timestamp, delta,false)))+","+
 						x1+","+y1+","+z1+"\n");
 			}
-			timestamp+=delta;		
+			
+			timestamp = GT3XUtils.FixTimeStamp(timestamp, delta,true);
 			
 			if (inGAcceleration) {
 				writer.append(GT3XUtils.simpleDateFormatObject(GT3XUtils.MHEALTH_TIMESTAMP_DATA_FORMAT)
-						.format(new Date(Math.round(timestamp)))+","+
+						.format(new Date((long) GT3XUtils.FixTimeStamp(timestamp, delta,false)))+","+
 						GT3XUtils.decimalFormatObject().format(gx2)+","+
 						GT3XUtils.decimalFormatObject().format(gy2)+","+
 						GT3XUtils.decimalFormatObject().format(gz2)+"\n");
 			} else {
 				writer.append(GT3XUtils.simpleDateFormatObject(GT3XUtils.MHEALTH_TIMESTAMP_DATA_FORMAT)
-						.format(new Date(Math.round(timestamp)))+","+
+						.format(new Date((long) GT3XUtils.FixTimeStamp(timestamp, delta,false)))+","+
 						x2+","+y2+","+z2+"\n");
 			}
-			timestamp+=delta;
+
+			timestamp = GT3XUtils.FixTimeStamp(timestamp, delta,true);
 		} else {
 			if (inGAcceleration) {
 				writer.append(GT3XUtils.decimalFormatObject().format(gx1)+","+
@@ -144,7 +146,8 @@ public class AccelPair {
 			} else {
 				writer.append(x1+","+y1+","+z1+"\n");
 			}
-			timestamp+=delta;
+
+			timestamp = GT3XUtils.FixTimeStamp(timestamp, delta,true);
 			
 			if (inGAcceleration) {
 				writer.append(GT3XUtils.decimalFormatObject().format(gx2)+","+
@@ -153,7 +156,8 @@ public class AccelPair {
 			} else {
 				writer.append(x2+","+y2+","+z2+"\n");
 			}
-			timestamp+=delta;
+	
+			timestamp = GT3XUtils.FixTimeStamp(timestamp, delta,true);
 		}
 		return timestamp;
 	}

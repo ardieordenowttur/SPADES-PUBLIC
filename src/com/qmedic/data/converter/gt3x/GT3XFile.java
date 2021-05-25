@@ -115,11 +115,11 @@ public class GT3XFile {
 			throws IOException {
 		if(this._WithTimestamps) {
 			writer.append(GT3XUtils.simpleDateFormatObject(GT3XUtils.MHEALTH_TIMESTAMP_DATA_FORMAT).
-					format(new Date(Math.round(timestamp))) + "," + lastKnownData + "\n");
+					format(new Date((long) GT3XUtils.FixTimeStamp(timestamp, this._Delta,false))) + "," + lastKnownData + "\n");
 		} else {
 			writer.append(lastKnownData+"\n");
 		}
-		timestamp += this._Delta;
+		timestamp = GT3XUtils.FixTimeStamp(timestamp, this._Delta,true);
 		return timestamp;
 	}
 
@@ -342,7 +342,7 @@ public class GT3XFile {
 				int i=0;
 				int datum=0;
 				double timestamp=gt3xFile._StartDate;
-				gt3xFile._Delta=1000.0/gt3xFile._SampleRate;
+				gt3xFile._Delta = Math.round(1000.0/gt3xFile._SampleRate * 100d) / 100d;  // round the delta to its fourth decimal
 
 				FileWriter writer = new FileWriter(gt3xFile._OutputFileName);
 				writer.append(gt3xFile._WithTimestamps ? "HEADER_TIME_STAMP,X,Y,Z\n" : "X,Y,Z\n"); // Add mHealth header
@@ -422,7 +422,7 @@ public class GT3XFile {
 				long logTimestamp = -1;				
 
 				double timestamp = gt3xFile._StartDate;
-				gt3xFile._Delta = 1000.0/gt3xFile._SampleRate;
+				gt3xFile._Delta = Math.round(1000.0/gt3xFile._SampleRate * 100d) / 100d;  // round the delta to its second decimal
 
 				// Set acceleration scale
 				double accelerationScale = 0.0;
