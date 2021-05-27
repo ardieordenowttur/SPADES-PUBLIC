@@ -40,7 +40,7 @@ import com.qmedic.data.converter.gt3x.enums.DeviceVersion;
 
 public class GT3XUtils {
 	
-	public static final String MHEALTH_TIMESTAMP_DATA_FORMAT = "yyyy/MM/dd HH:mm:ss.SSS"; // the format of the data timestamp
+	public static final String MHEALTH_TIMESTAMP_DATA_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS"; // the format of the data timestamp
 	public static final String MHEALTH_TIMESTAMP_FILE_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"; // the format of the file timestamp
 	public static final String MHEALTH_TIMEZONE_FILE_FORMAT = "Z"; // the format of the timezone (UTC offset)
 	public static final String MHEALTH_DECIMAL_FORMAT = "0.000";
