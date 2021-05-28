@@ -25,21 +25,13 @@
  * 
  ******************************************************************************************/
 
-package com.qmedic.data.converter.gt3x;
+package com.qmedic.data.converter.gt3x.iface;
 
-public class ConverterMain {
+import java.util.Calendar;
+import java.util.Map;
 
-	public static void main(String[] args) {
-
-		// Command line example: java -jar GT3XParser.jar GT3XParser/sample-data/v1/sample1.gt3x home/user/Development/csv/ G_VALUE WITH_TIMESTAMP SPLIT MHEALTH
-		if (args.length!=8){
-			System.out.println("java -jar GT3XParser.jar [INPUT GT3X FILE] [OUTPUT CSV DIRECTORYPATH] [G_VALUE/ADC_VALUE] [WITH_TIMESTAMP/WITHOUT_TIMESTAMP] [SPLIT/NO_SPLIT] [MHEALTH/ACTIGRAPH] [SUMMARY_ON/SUMMARY_OFF] [DEBUG_ON/DEBUG_OFF]");
-			return;
-		}
-		
-		// Try to process the file
-		ConverterWorker cw = new ConverterWorker(args);
-		cw.processFile();
-		
-	}
+public interface GT3XFileProcessingListener {
+	void onProcessingStarted(String inputFileFullPath, String message, long bytesOfUncompressedContent, Map<String,Object> callbackMetadata);
+	void onHourlyFileCreated(String createdFilePath, String message, long bytesRead, Map<String,Object> callbackMetadata, Calendar calendar);
+	void onProcessingFinished(String inputFileFullPath, String message, long bytesReadTotal, Map<String,Object> callbackMetadata);
 }

@@ -22,24 +22,50 @@
  * 
  * Authors:
  *  - Billy, Stanis Laus
+ *  - Albinali, Fahd
  * 
  ******************************************************************************************/
 
 package com.qmedic.data.converter.gt3x;
 
-public class ConverterMain {
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 
-	public static void main(String[] args) {
+import com.qmedic.data.converter.gt3x.base.OutFileWriter;
+import com.qmedic.data.converter.gt3x.model.AccelDataPoint;
 
-		// Command line example: java -jar GT3XParser.jar GT3XParser/sample-data/v1/sample1.gt3x home/user/Development/csv/ G_VALUE WITH_TIMESTAMP SPLIT MHEALTH
-		if (args.length!=8){
-			System.out.println("java -jar GT3XParser.jar [INPUT GT3X FILE] [OUTPUT CSV DIRECTORYPATH] [G_VALUE/ADC_VALUE] [WITH_TIMESTAMP/WITHOUT_TIMESTAMP] [SPLIT/NO_SPLIT] [MHEALTH/ACTIGRAPH] [SUMMARY_ON/SUMMARY_OFF] [DEBUG_ON/DEBUG_OFF]");
-			return;
-		}
-		
-		// Try to process the file
-		ConverterWorker cw = new ConverterWorker(args);
-		cw.processFile();
-		
+public class ActivityCountSummaryCreator extends OutFileWriter {
+	
+	private long _prevMinuteTs = 0;
+	private double _totalSoFar = 0d;
+
+	public ActivityCountSummaryCreator() {
+		this._prevMinuteTs = 0;
+		this._totalSoFar = 0d;
 	}
+	
+	public void processNewAccelData(final BufferedWriter writer, final long timestamp, final AccelDataPoint data, final SimpleDateFormat sdf) throws IOException {
+		long currMinuteTs = timestamp / 60000 * 60000;
+		if(currMinuteTs != _prevMinuteTs) {
+			if(_prevMinuteTs != 0) {
+				writer.append(sdf.format((long)_prevMinuteTs));
+				writer.append(',');
+				writer.append(Integer.toString((int)_totalSoFar));
+				writer.append('\n');
+				_totalSoFar = 0d;
+			}
+			_prevMinuteTs = currMinuteTs;
+		}
+		_totalSoFar += Math.sqrt(data.x()*data.x() + data.y()*data.y() + data.z()*data.z());
+	}
+	
+	public double getTotalSoFar() {
+		return _totalSoFar;
+	}
+	
+	public double getPreviousMinuteTimestamp() {
+		return _prevMinuteTs;
+	}
+	
 }

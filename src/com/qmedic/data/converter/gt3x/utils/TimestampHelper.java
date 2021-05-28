@@ -21,25 +21,57 @@
  * SOFTWARE.
  * 
  * Authors:
+ *  - Albinali, Fahd
  *  - Billy, Stanis Laus
  * 
  ******************************************************************************************/
 
-package com.qmedic.data.converter.gt3x;
+package com.qmedic.data.converter.gt3x.utils;
 
-public class ConverterMain {
+public class TimestampHelper {
+	private int _denominator;
+    private  int _numerator;
+    private  int _quotient;
+    private int _count;
 
-	public static void main(String[] args) {
+    public TimestampHelper(int dividend, int divisor)
+    {
+        int quotient = dividend/divisor;
+        int remainder = dividend%divisor;
+        int gcd = GreatestCommonDivisor(divisor, remainder);
 
-		// Command line example: java -jar GT3XParser.jar GT3XParser/sample-data/v1/sample1.gt3x home/user/Development/csv/ G_VALUE WITH_TIMESTAMP SPLIT MHEALTH
-		if (args.length!=8){
-			System.out.println("java -jar GT3XParser.jar [INPUT GT3X FILE] [OUTPUT CSV DIRECTORYPATH] [G_VALUE/ADC_VALUE] [WITH_TIMESTAMP/WITHOUT_TIMESTAMP] [SPLIT/NO_SPLIT] [MHEALTH/ACTIGRAPH] [SUMMARY_ON/SUMMARY_OFF] [DEBUG_ON/DEBUG_OFF]");
-			return;
-		}
-		
-		// Try to process the file
-		ConverterWorker cw = new ConverterWorker(args);
-		cw.processFile();
-		
-	}
+        _quotient = quotient;
+        _numerator = remainder/gcd;
+        _denominator = divisor/gcd;
+        _count = 0;
+
+        Reset();
+    }
+
+    private int GreatestCommonDivisor(int a, int b)
+    {
+        while (0 != a)
+        {
+            int c = a;
+            a = b%a;
+            b = c;
+        }
+
+        return b;
+    }
+
+    public int Next()
+    {
+        int tick = _quotient + (_count < _numerator ? 1 : 0);
+
+        if (_denominator == ++_count)
+            Reset();
+
+        return tick;
+    }
+
+    public void Reset()
+    {
+        _count = 0;
+    }
 }

@@ -1,6 +1,6 @@
 /******************************************************************************************
  * 
- * Copyright (c) 2015 EveryFit, Inc.
+ * Copyright (c) 2016 EveryFit, Inc.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,52 +25,39 @@
  * 
  ******************************************************************************************/
 
-package com.qmedic.data.converter.gt3x;
+package com.qmedic.data.converter.gt3x.model;
 
-public class LogRecord {
+public class AccelDataPoint {
+
+	private double x;
+	private double y;
+	private double z;
 	
-	public static final int HEADER_SIZE = 8; // bytes
-	
-	private byte separator = -1;
-	private short type = -1;
-	private long timestamp = -1;
-	private int payloadSize = -1;
-	private byte[] payload = null;
-	
-	public byte getSeparator() {
-		return separator;
-	}
-	public void setSeparator(byte separator) {
-		this.separator = separator;
+	public AccelDataPoint(final double x, final double y, final double z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
 	}
 	
-	public short getType() {
-		return type;
-	}
-	public void setType(short type) {
-		this.type = type;
+	public double x() {
+		return x;
 	}
 	
-	public long getTimestamp() {
-		return timestamp;
-	}
-	public void setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
+	public double y() {
+		return y;
 	}
 	
-	public int getPayloadSize() {
-		return payloadSize;
-	}
-	public void setPayloadSize(int payloadSize) {
-		this.payloadSize = payloadSize;
+	public double z() {
+		return z;
 	}
 	
-	public byte[] getPayload() {
-		return payload;
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(x);
+		sb.append(',');
+		sb.append(y);
+		sb.append(',');
+		sb.append(z);
+		return sb.toString();
 	}
-	public void setPayload(byte[] payload) {
-		this.payload = new byte[payloadSize];
-		this.payload = payload;
-	}
-	
 }

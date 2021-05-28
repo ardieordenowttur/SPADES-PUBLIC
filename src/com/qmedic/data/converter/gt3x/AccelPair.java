@@ -1,6 +1,6 @@
 /******************************************************************************************
  * 
- * Copyright (c) 2015 EveryFit, Inc.
+ * Copyright (c) 2016 EveryFit, Inc.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,29 +28,53 @@
 
 package com.qmedic.data.converter.gt3x;
 
-import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.Date;
+import java.text.SimpleDateFormat;
 
-public class AccelPair {
-	
-	public short x1;
-	public short y1;
-	public short z1;
-	
-	public double gx1;
-	public double gy1;
-	public double gz1;
-	
-	public short x2;
-	public short y2;
-	public short z2;
-	
-	public double gx2;
-	public double gy2;
-	public double gz2;
+import com.qmedic.data.converter.gt3x.base.OutFileWriter;
+import com.qmedic.data.converter.gt3x.enums.GT3XParserOutputDataType;
+import com.qmedic.data.converter.gt3x.model.AccelDataPoint;
+import com.qmedic.data.converter.gt3x.model.AccelPairData;
+import com.qmedic.data.converter.gt3x.utils.TimestampHelper;
 
-	public AccelPair(final byte[] bytes, final double accelerationScale) {
+public class AccelPair extends OutFileWriter {
+
+	public TimestampHelper tsHelper;
+	
+	private boolean _inGAcceleration;
+	private boolean _withTimestamps;
+	private GT3XParserOutputDataType _outputDataType = GT3XParserOutputDataType.MHEALTH;
+	
+	private short x1;
+	private short y1;
+	private short z1;
+	
+	private double gx1;
+	private double gy1;
+	private double gz1;
+	
+	private short x2;
+	private short y2;
+	private short z2;
+	
+	private double gx2;
+	private double gy2;
+	private double gz2;
+
+	public AccelPair(
+			final boolean inGAcceleration,
+			final boolean withTimestamps,
+			final int samplingRate,
+			final GT3XParserOutputDataType outputDataType
+			) {
+		this._inGAcceleration = inGAcceleration;
+		this._withTimestamps = withTimestamps;
+		this._outputDataType = outputDataType;
+		this.tsHelper = new TimestampHelper(1000, samplingRate);
+	}
+	
+	public void setAccelPair(final byte[] bytes, final double accelerationScale) {
 		/* 
 		 * Expect two 36-bits data (72 bits = 9 bytes)
 		 * Since each second of raw activity sample is packed into 12-bit values 
@@ -103,62 +127,139 @@ public class AccelPair {
 		}
 	}
 	
-	public double writeToFile(
-			final FileWriter writer, 
-			double timestamp,
-			final double delta, 
-			final boolean inGAcceleration, 
-			final boolean withTimestamps
-			) throws IOException {				
-		if(withTimestamps) {			
-			if (inGAcceleration) {
-				writer.append(GT3XUtils.simpleDateFormatObject(GT3XUtils.MHEALTH_TIMESTAMP_DATA_FORMAT)
-						.format(new Date((long) GT3XUtils.FixTimeStamp(timestamp, delta,false)))+","+
-						GT3XUtils.decimalFormatObject().format(gx1)+","+
-						GT3XUtils.decimalFormatObject().format(gy1)+","+
-						GT3XUtils.decimalFormatObject().format(gz1)+"\n");
+	public AccelPairData writeToFile(final BufferedWriter writer, double timestamp, final SimpleDateFormat sdf) throws IOException {	
+		AccelDataPoint data1;
+		AccelDataPoint data2;
+		if(_withTimestamps) {			
+			if (_inGAcceleration) {
+				writer.append(sdf.format((long)timestamp));
+				writer.append(',');
+				writer.append(formatTo3Decimals(gx1));
+				writer.append(',');
+				writer.append(formatTo3Decimals(gy1));
+				writer.append(',');
+				writer.append(formatTo3Decimals(gz1));
+				if(_outputDataType == GT3XParserOutputDataType.ACTIGRAPH) writer.append('\r');
+				writer.append('\n');
+				data1 = new AccelDataPoint(gx1,gy1,gz1);
 			} else {
-				writer.append(GT3XUtils.simpleDateFormatObject(GT3XUtils.MHEALTH_TIMESTAMP_DATA_FORMAT)
-						.format(new Date((long) GT3XUtils.FixTimeStamp(timestamp, delta,false)))+","+
-						x1+","+y1+","+z1+"\n");
-			}
-			
-			timestamp = GT3XUtils.FixTimeStamp(timestamp, delta,true);
-			
-			if (inGAcceleration) {
-				writer.append(GT3XUtils.simpleDateFormatObject(GT3XUtils.MHEALTH_TIMESTAMP_DATA_FORMAT)
-						.format(new Date((long) GT3XUtils.FixTimeStamp(timestamp, delta,false)))+","+
-						GT3XUtils.decimalFormatObject().format(gx2)+","+
-						GT3XUtils.decimalFormatObject().format(gy2)+","+
-						GT3XUtils.decimalFormatObject().format(gz2)+"\n");
-			} else {
-				writer.append(GT3XUtils.simpleDateFormatObject(GT3XUtils.MHEALTH_TIMESTAMP_DATA_FORMAT)
-						.format(new Date((long) GT3XUtils.FixTimeStamp(timestamp, delta,false)))+","+
-						x2+","+y2+","+z2+"\n");
+				writer.append(sdf.format((long)timestamp));
+				writer.append(',');
+				writer.append(formatTo3Decimals(x1));
+				writer.append(',');
+				writer.append(formatTo3Decimals(y1));
+				writer.append(',');
+				writer.append(formatTo3Decimals(z1));
+				if(_outputDataType == GT3XParserOutputDataType.ACTIGRAPH) writer.append('\r');
+				writer.append('\n');
+				data1 = new AccelDataPoint(x1,y1,z1);
 			}
 
-			timestamp = GT3XUtils.FixTimeStamp(timestamp, delta,true);
+			timestamp += tsHelper.Next();
+			
+			if (_inGAcceleration) {
+				writer.append(sdf.format((long)timestamp));
+				writer.append(',');
+				writer.append(formatTo3Decimals(gx2));
+				writer.append(',');
+				writer.append(formatTo3Decimals(gy2));
+				writer.append(',');
+				writer.append(formatTo3Decimals(gz2));
+				if(_outputDataType == GT3XParserOutputDataType.ACTIGRAPH) writer.append('\r');
+				writer.append('\n');
+				data2 = new AccelDataPoint(gx2,gy2,gz2);
+			} else {
+				writer.append(sdf.format((long)timestamp));
+				writer.append(',');
+				writer.append(formatTo3Decimals(x2));
+				writer.append(',');
+				writer.append(formatTo3Decimals(y2));
+				writer.append(',');
+				writer.append(formatTo3Decimals(z2));
+				if(_outputDataType == GT3XParserOutputDataType.ACTIGRAPH) writer.append('\r');
+				writer.append('\n');
+				data2 = new AccelDataPoint(x2,y2,z2);
+			}
+
+			timestamp += tsHelper.Next();
+
 		} else {
-			if (inGAcceleration) {
-				writer.append(GT3XUtils.decimalFormatObject().format(gx1)+","+
-						GT3XUtils.decimalFormatObject().format(gy1)+","+
-						GT3XUtils.decimalFormatObject().format(gz1)+"\n");
+			if (_inGAcceleration) {
+				writer.append(formatTo3Decimals(gx1));
+				writer.append(',');
+				writer.append(formatTo3Decimals(gy1));
+				writer.append(',');
+				writer.append(formatTo3Decimals(gz1));
+				if(_outputDataType == GT3XParserOutputDataType.ACTIGRAPH) writer.append('\r');
+				writer.append('\n');
+				data1 = new AccelDataPoint(gx1,gy1,gz1);
 			} else {
-				writer.append(x1+","+y1+","+z1+"\n");
+				writer.append(formatTo3Decimals(x1));
+				writer.append(',');
+				writer.append(formatTo3Decimals(y1));
+				writer.append(',');
+				writer.append(formatTo3Decimals(z1));
+				if(_outputDataType == GT3XParserOutputDataType.ACTIGRAPH) writer.append('\r');
+				writer.append('\n');
+				data1 = new AccelDataPoint(x1,y1,z1);
 			}
 
-			timestamp = GT3XUtils.FixTimeStamp(timestamp, delta,true);
+			timestamp += tsHelper.Next();
 			
-			if (inGAcceleration) {
-				writer.append(GT3XUtils.decimalFormatObject().format(gx2)+","+
-						GT3XUtils.decimalFormatObject().format(gy2)+","+
-						GT3XUtils.decimalFormatObject().format(gz2)+"\n");
+			if (_inGAcceleration) {
+				writer.append(formatTo3Decimals(gx2));
+				writer.append(',');
+				writer.append(formatTo3Decimals(gy2));
+				writer.append(',');
+				writer.append(formatTo3Decimals(gz2));
+				if(_outputDataType == GT3XParserOutputDataType.ACTIGRAPH) writer.append('\r');
+				writer.append('\n');
+				data2 = new AccelDataPoint(gx2,gy2,gz2);
 			} else {
-				writer.append(x2+","+y2+","+z2+"\n");
+				writer.append(formatTo3Decimals(x2));
+				writer.append(',');
+				writer.append(formatTo3Decimals(y2));
+				writer.append(',');
+				writer.append(formatTo3Decimals(z2));
+				if(_outputDataType == GT3XParserOutputDataType.ACTIGRAPH) writer.append('\r');
+				writer.append('\n');
+				data2 = new AccelDataPoint(x2,y2,z2);
 			}
 	
-			timestamp = GT3XUtils.FixTimeStamp(timestamp, delta,true);
+			timestamp += tsHelper.Next();
+			
 		}
-		return timestamp;
+		return new AccelPairData(timestamp, data1, data2);
+	}
+	
+	public double advanceTimestampHelper() {
+		long ts = tsHelper.Next();
+		return ts;
+	}
+	
+	public String getLastRecordedXYZ(final double accelerationScale) {
+		StringBuilder sb = new StringBuilder();
+		if(_inGAcceleration) {
+			sb.append(formatTo3Decimals(x2/accelerationScale));
+			sb.append(',');
+			sb.append(formatTo3Decimals(y2/accelerationScale));
+			sb.append(',');
+			sb.append(formatTo3Decimals(z2/accelerationScale));			
+		} else {
+			sb.append(x2/accelerationScale);
+			sb.append(',');
+			sb.append(y2/accelerationScale);
+			sb.append(',');
+			sb.append(z2/accelerationScale);
+		}
+		return sb.toString();
+	}
+	
+	public AccelDataPoint getLastRecordXYZ(final double accelerationScale) {
+		if(_inGAcceleration) {
+			return new AccelDataPoint(x2/accelerationScale, y2/accelerationScale, z2/accelerationScale);
+		} else {
+			return new AccelDataPoint(x2, y2, z2);
+		}
 	}
 }

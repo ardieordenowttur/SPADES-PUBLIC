@@ -25,21 +25,52 @@
  * 
  ******************************************************************************************/
 
-package com.qmedic.data.converter.gt3x;
+package com.qmedic.data.converter.gt3x.model;
 
-public class ConverterMain {
-
-	public static void main(String[] args) {
-
-		// Command line example: java -jar GT3XParser.jar GT3XParser/sample-data/v1/sample1.gt3x home/user/Development/csv/ G_VALUE WITH_TIMESTAMP SPLIT MHEALTH
-		if (args.length!=8){
-			System.out.println("java -jar GT3XParser.jar [INPUT GT3X FILE] [OUTPUT CSV DIRECTORYPATH] [G_VALUE/ADC_VALUE] [WITH_TIMESTAMP/WITHOUT_TIMESTAMP] [SPLIT/NO_SPLIT] [MHEALTH/ACTIGRAPH] [SUMMARY_ON/SUMMARY_OFF] [DEBUG_ON/DEBUG_OFF]");
-			return;
-		}
-		
-		// Try to process the file
-		ConverterWorker cw = new ConverterWorker(args);
-		cw.processFile();
-		
+public class LogRecord {
+	
+	public static final int HEADER_SIZE = 8; // bytes
+	
+	private byte separator = -1;
+	private short type = -1;
+	private long timestamp = -1;
+	private int payloadSize = -1;
+	private byte[] payload = null;
+	
+	public byte getSeparator() {
+		return separator;
 	}
+	public void setSeparator(byte separator) {
+		this.separator = separator;
+	}
+	
+	public short getType() {
+		return type;
+	}
+	public void setType(short type) {
+		this.type = type;
+	}
+	
+	public long getTimestamp() {
+		return timestamp;
+	}
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
+	}
+	
+	public int getPayloadSize() {
+		return payloadSize;
+	}
+	public void setPayloadSize(int payloadSize) {
+		this.payloadSize = payloadSize;
+	}
+	
+	public byte[] getPayload() {
+		return payload;
+	}
+	public void setPayload(byte[] payload) {
+		this.payload = new byte[payloadSize];
+		this.payload = payload;
+	}
+	
 }

@@ -25,21 +25,30 @@
  * 
  ******************************************************************************************/
 
-package com.qmedic.data.converter.gt3x;
+package com.qmedic.data.converter.gt3x.model;
 
-public class ConverterMain {
+public class AccelPairData {
 
-	public static void main(String[] args) {
-
-		// Command line example: java -jar GT3XParser.jar GT3XParser/sample-data/v1/sample1.gt3x home/user/Development/csv/ G_VALUE WITH_TIMESTAMP SPLIT MHEALTH
-		if (args.length!=8){
-			System.out.println("java -jar GT3XParser.jar [INPUT GT3X FILE] [OUTPUT CSV DIRECTORYPATH] [G_VALUE/ADC_VALUE] [WITH_TIMESTAMP/WITHOUT_TIMESTAMP] [SPLIT/NO_SPLIT] [MHEALTH/ACTIGRAPH] [SUMMARY_ON/SUMMARY_OFF] [DEBUG_ON/DEBUG_OFF]");
-			return;
-		}
-		
-		// Try to process the file
-		ConverterWorker cw = new ConverterWorker(args);
-		cw.processFile();
-		
+	private double timestamp;
+	private AccelDataPoint firstAccelDataPoint;
+	private AccelDataPoint secondAccelDataPoint;
+	
+	public AccelPairData(final double timestamp, final AccelDataPoint accelData1, final AccelDataPoint accelData2) {
+		this.timestamp = timestamp;
+		this.firstAccelDataPoint = accelData1;
+		this.secondAccelDataPoint = accelData2;
 	}
+	
+	public double timestamp() {
+		return this.timestamp;
+	}
+	
+	public AccelDataPoint first() {
+		return this.firstAccelDataPoint;
+	}
+	
+	public AccelDataPoint second() {
+		return this.secondAccelDataPoint;
+	}
+	
 }
